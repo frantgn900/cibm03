@@ -14,8 +14,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
         opts = Options()
         cls.selenium = WebDriver(options=opts)
         cls.selenium.implicitly_wait(5)
-
-        
         User.objects.create_superuser("isard", "isard@isardvdi.com", "pirineus")
 
     @classmethod
@@ -24,7 +22,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
         super().tearDownClass()
 
     def test_create_user_and_check_permissions(self):
-        
         self.selenium.get(f'{self.live_server_url}/admin/login/')
         username_input = self.selenium.find_element(By.NAME, "username")
         password_input = self.selenium.find_element(By.NAME, "password")
@@ -42,7 +39,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
         
         self.selenium.find_element(By.XPATH, "//input[@value='Save and continue editing']").click()
 
-        
         staff_checkbox = self.selenium.find_element(By.ID, "id_is_staff")
         if not staff_checkbox.is_selected():
             staff_checkbox.click()
@@ -73,10 +69,10 @@ class MySeleniumTests(StaticLiveServerTestCase):
             self.selenium.find_element(By.XPATH, "//a[text()='Users']")
             assert False, "Error: l'usuari pot veure Users"
         except NoSuchElementException:
-            print("Ok l'usuari no pot veure Users")
+            pass
 
         try:
             self.selenium.find_element(By.XPATH, "//a[text()='Questions']")
-            print("Ok l'usuari pot veure Questions")
         except NoSuchElementException:
-            print("Error: l'usuari no pot veure Questions")
+            assert False, "Error: l'usuari no pot veure Questions"
+
